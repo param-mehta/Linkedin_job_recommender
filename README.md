@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains an algorithmic trading strategy implemented using the Zerodha Kite Connect API. The strategy aims to automate trading decisions based on predefined conditions and market data analysis.
+This repository contains the code to implement an automated data pipenline that scraps latest jobs from Linkedin and performs a similarity search between job descriptions and resume to return the top 5 most relevant jobs
 
 ## Features
 
@@ -87,16 +87,3 @@ This script contains the main strategy loop that checks conditions, executes tra
 
 This contains a simple streamlit dashboard that displays the open positions, completed orders, failer orders and runtime errors.
 
-
-
-## Disclaimer
-
-I am not a financial advisor, and the information provided in this repository should not be considered as financial advice or recommendations for trading decisions. Trading in financial markets involves inherent risks, including the risk of substantial losses.
-
-The strategy implemented in this repository is a simple demonstration strategy and may not be suitable for actual trading without further development, testing, and customization. It is not intended to be imitated or used for live trading without thorough understanding, modification, and backtesting.
-
-I am not responsible for any losses incurred as a result of using the information, code, or strategies provided in this repository. Users are solely responsible for their trading decisions and should conduct their own research, analysis, and risk assessment before engaging in any trading activities.
-
-By accessing and using this repository, you agree to release me from any liability for losses or damages that may arise directly or indirectly from the use of the information or code provided herein.
-
- Happy trading! 📈💼
