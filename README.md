@@ -2,13 +2,13 @@
 
 ## Overview
 
-This repository contains the code to implement an automated data pipenline that scraps latest jobs from Linkedin and performs a similarity search between job descriptions and the uploaded resume to return the top 5 most relevant jobs
+An end-to-end job recommender engine that performs a similarity search between job descriptions and the uploaded resume to return the top 5 most relevant jobs
 
 ## Features
 
-- Use Airflow to orchestrate the data ingestion and preprocessing pipeline
+- Use Airflow to orchestrate data ingestion and preprocessing
   
-    - Scrap thousands of job details every day for the desired parameters of job title, location, etc and store as json files on Google Cloud Storage
+    - Scrap thousands of job details every day for the desired parameters of job title, location, etc and store the json files on Google Cloud Storage
     - Clean and preprocess raw data in parallel using pyspark. Generate summary statistics about collected jobs using Spark SQL 
     - Store job data and statistics as MongoDB collections
     - Convert job descriptions into word embeddings using Langchain 
@@ -18,7 +18,9 @@ This repository contains the code to implement an automated data pipenline that 
     - Parse user's resume using Google's Cloud Vision API and convert into embeddings using Langchain
     - Filter jobs from database based on the parameters selected by user
     - Perform similarity search between resume text and job descriptions of filtered positions
-    - Display the details of top k relevant jobs along with an LLM generated summary explaining why the job description and resume constitute a suitable match
+    - Display the details of top k relevant jobs along with an LLM generated summary explaining why the job description and resume constitute a suitable match.
+ 
+## Pipeline Overview
 <img width="1423" alt="Screenshot 2024-03-10 at 12 27 38 AM" src="https://github.com/param-mehta/Linkedin_job_recommender/assets/61198990/fd219f8e-5f01-4809-bd7a-b8e19c3e58de">
 
 
@@ -59,7 +61,7 @@ To run the trading strategy, you need to do the following:
 
 ## Usage
 
-1. Setup the environment following variables on Google Composer. If you are runnning locally, run `bash env.sh` to set environment variables.
+1. Setup the following environment variables on Google Composer. If you are runnning locally, run `bash env.sh` to set environment variables.
    ```bash
     #!/bin/bash
     export GS_BUCKET_NAME=""
@@ -74,7 +76,7 @@ To run the trading strategy, you need to do the following:
     export COLLECTION_NAME_STATS=""
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
     ```
-2. Install the following dependencies under the PyPI Packages tab on Google Composer. If running locally, run `pip install -r requirements.txt`
+2. Install the following dependencies under the PyPI Packages tab on in your Composer environment. If running locally, run `pip install -r requirements.txt`
     ```bash
     google-cloud-aiplatform
     apache-airflow-providers-apache-spark
@@ -97,34 +99,48 @@ To run the trading strategy, you need to do the following:
 
 `linkedin_dds.py`: 
 
-This contains helper functions to:
-- Place and modify normal orders, stop loss orders or gtt orders
-- Calculate technical indicators such as bollinger bands and Volume Weighted Average Price
-- Fetch historical data and perform error handling
-
-While the helper functions are using the Kite Connect's python client, the main strategy code has been written in a way that one can switch to another platform's API with minimal changes.
+This is the main DAG file that defines all the operators and the dependencies between them. It runs on a daily basis.
 
 `get_jobs_from_api.py`:
 
-This script initializes the data structures and files needed to store trade details and trading parameters relevant to the strategy. 
+- fetches data from Linkedin using the provided parameters through the Jsearch API
+- stores the json files in GCS bucket. 
 
 `gcs_to_mongo.py`:
 
-This script initializes the data structures and files needed to store trade details and trading parameters relevant to the strategy. 
+- reads json files from GCS bucket and converts them into a spark rdd
+- filters and modifies specific fields based on the desired format
+- Applies text cleaning functions on the job description field.
+- Stores the job details as a collection on a MongoDB Atlas cluster
 
 `convert_to_embeddings.py`:
 
-This script uses Selenium to automate the process of logging into the account of kite and fetching the access_tokens for multiple accounts.
+This script converts the description field into embeddings using Langchain. It uses Instructor Embeddings from Hugging Face
+
+`calculate summary_statistics.py`:
+
+This script converts the description field into embeddings using Langchain. It uses Instructor Embeddings from Hugging Face
 
 `app.py`:
 
-This script fetches daily instrument data and initializes files to store trade details and strategy paramters for a single trading session
+This script is a streamlit dashboard that 
+
+- displays the job statistics about the collected jobs
+- Prompts the user to select search parameters and upload the resume
+- Parses resume text, embeds it and performs similarity search to recommend top k job positions
+- For each job, displays job details like salary, location, url and similarity score
+- Also displays a Gemini induced summary explaining why the resume is a good match for the selected job
 
 `helper.py`:
 
-This script contains the main strategy loop that checks conditions, executes trades and updates the trailing stop loss. The script stops running when either the max no. of cycles is reached or when the trading session concludes. 
+This script contains the helper functions used by app.py.
 
 `user_definition.py`: 
 
-This contains a simple streamlit dashboard that displays the open positions, completed orders, failer orders and runtime errors.
+Configuration file to import environment variables.
+
+## Demo
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xM8NA1D05hk/0.jpg)](https://www.youtube.com/watch?v=xM8NA1D05hk)
+
+
 
