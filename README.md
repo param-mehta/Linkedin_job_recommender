@@ -1,16 +1,24 @@
-# Algorithmic Trading Bot
+# Linkedin Job Recommender
 
 ## Overview
 
-This repository contains the code to implement an automated data pipenline that scraps latest jobs from Linkedin and performs a similarity search between job descriptions and resume to return the top 5 most relevant jobs
+This repository contains the code to implement an automated data pipenline that scraps latest jobs from Linkedin and performs a similarity search between job descriptions and the uploaded resume to return the top 5 most relevant jobs
 
 ## Features
 
-- Automated trading based on predefined conditions. 
-- Execute trades across multiple accounts.
-- Historical and live data analysis for decision making.
-- Supports multiple instruments including futures and options.
-- Deploy complex strategies with a trailing stop loss, detect candlestick patterns like hammer and shooting star, place GTT (good till triggered) orders
+- Use Airflow to orchestrate the data ingestion and preprocessing pipeline
+  
+    - Scrap thousands of job details every day for the desired parameters of job title, location, etc and store as json files on Google Cloud Storage
+    - Clean and preprocess raw data in parallel using pyspark. Generate summary statistics about collected jobs using Spark SQL 
+    - Store job data and statistics as MongoDB collections
+    - Convert job descriptions into word embeddings using Langchain 
+       
+- A dashboard to display job statistics and recommend relevant jobs
+
+    - Parse user's resume using Google's Cloud Vision API and convert into embeddings using Langchain
+    - Filter jobs from database based on the parameters selected by user
+    - Perform similarity search between resume text and job descriptions of filtered positions
+    - Display the details of top k relevant jobs along with an LLM generated summary explaining why the job description and resume constitute a suitable match
 
 ## Requirements
 
