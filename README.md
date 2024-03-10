@@ -23,6 +23,27 @@ An end-to-end job recommender engine that performs a similarity search between j
 ## Pipeline Overview
 <img width="1423" alt="Screenshot 2024-03-10 at 12 27 38 AM" src="https://github.com/param-mehta/Linkedin_job_recommender/assets/61198990/fd219f8e-5f01-4809-bd7a-b8e19c3e58de">
 
+- The top branch of the pipeline is what we automate through Airflow. We scrap jobs from LinkedIn, clean data, calculate job statistics,convert descriptions to embeddings and store processed data as mongoDB collections. The reason I am using a NoSQl database is becaus the data is ingested from multiple sources with different schema and format. Also, MongoDB's Atlas Vector Search allows you to store vector embeddings alongside your source data and provides eficient vector operations on these embeddings. While tradiotional SQL databases are sufficiently fast on data that's not too large, vector databases scale much better than the former.
+
+- The bottom branch of the pipline represents the front end. If you do want a live dashboard and want the recommendations to be generated as part of the batch job, you can make a minor tweak in the DAG pipeline. Store your resume and add an additional task at the end which performs the similarity search and fires an Email with the job urls of top recommendations.
+
+## DAG Workflow
+<img width="1406" alt="image" src="https://github.com/param-mehta/Linkedin_job_recommender/assets/61198990/d5212a83-65b9-4610-a957-ca24660c4d22">
+
+
+This is what the top branch of the pipeline looks like as a DAG diagram. There are 4 major tasks that run sequentially
+
+
+This following is what a cycle of successful DAG runs looks like on Cloud Composer
+
+
+<img width="1468" alt="successful_airflow_run" src="https://github.com/param-mehta/Linkedin_job_recommender/assets/61198990/97d1085b-e5dc-476c-bc5d-978b40506bbf">
+
+
+
+The `convert_to_embeddings` task takes long because I am pushing individual jobs to the mongoDB collection rather than an a single push operation of all jobs that would end up overshooting the default memory (1GB) of small Composer environments
+
+
 
 ## Requirements
 
@@ -46,14 +67,15 @@ To run the trading strategy, you need to do the following:
     
 2. Clone the repository and install dependencies:
    
+    
     ```bash
-    cd algorithmic-trading-strategy
+    git clone https://github.com/yourusername/Linkedin_job_recommender.git
     ```
     
     ```bash
-    git clone https://github.com/yourusername/Algo_trading_bot.git
+    cd Linkedin_job_recommender
     ```
-
+    
     ```bash
     pip install -r requirements.txt
     ```
