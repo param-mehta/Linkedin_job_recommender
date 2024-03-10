@@ -44,14 +44,10 @@ This following is what a cycle of successful DAG runs looks like on Cloud Compos
 The `convert_to_embeddings` task takes long because I am pushing individual jobs to the mongoDB collection rather than an a single push operation of all jobs that would end up overshooting the default memory (1GB) of small Composer environments
 
 
+## Demo
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xM8NA1D05hk/0.jpg)](https://www.youtube.com/watch?v=xM8NA1D05hk)
 
-## Requirements
 
-To run the trading strategy, you need to do the following:
-
-- Get Zerodha Kite Connect API credentials from https://kite.trade/
-- Enable TOTP verification in your kite account
-- Install the dependencies as shown below
 
 ## Installation
 
@@ -161,8 +157,5 @@ This script contains the helper functions used by app.py.
 
 Configuration file to import environment variables.
 
-## Demo
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/xM8NA1D05hk/0.jpg)](https://www.youtube.com/watch?v=xM8NA1D05hk)
 
-
-
+## Time to find a job!
