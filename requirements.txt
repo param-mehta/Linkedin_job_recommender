@@ -1,0 +1,12 @@
+google-cloud-aiplatform
+apache-airflow-providers-apache-spark
+pymongo[srv]==3.11
+langchain==0.1.5
+langchain-community==0.0.18
+langchain-google-vertexai==0.0.2
+InstructorEmbedding==1.0.1
+google-cloud-storage
+pyspark==3.4.1
+certifi
+torch==2.0.1
+sentence_transformers==2.2.22

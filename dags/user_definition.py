@@ -1,0 +1,16 @@
+import os
+
+ATLAS_CONNECTION_STRING = os.environ['ATLAS_CONNECTION_STRING']
+DB_NAME = os.environ['DB_NAME']
+COLLECTION_NAME = os.environ['COLLECTION_NAME']
+VECTOR_INDEX_NAME = os.environ['VECTOR_INDEX_NAME']
+GS_BUCKET_NAME = os.environ['GS_BUCKET_NAME']
+GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
+GCP_PROJECT_NAME = os.environ['GCP_PROJECT_NAME']
+MONGO_USERNAME = os.environ['MONGO_USERNAME']
+MONGO_PASSWORD = os.environ['MONGO_PASSWORD']
+JOBS_COLLECTION_NAME = os.environ['JOBS_COLLECTION_NAME']
+COLLECTION_NAME_STATS = os.environ['COLLECTION_NAME_STATS']
+GOOGLE_API_STRING = """
+Store the contents of your service account json file here
+"""

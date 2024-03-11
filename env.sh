@@ -1,0 +1,15 @@
+#!/bin/bash
+export GS_BUCKET_NAME="api_jobs_data_json"
+export GOOGLE_API_KEY="/Users/parammehta/Desktop/usf/dds/final_project/dds_project.json"
+export GOOGLE_API_KEY="dds_shagun.json"
+export GCP_PROJECT_NAME="linkedin-job-recommender"
+export MONGO_USERNAME="param"
+export MONGO_PASSWORD="ZZ6Fz0hcJjODI3aH"
+export MONGO_IP=""
+export DB_NAME="msds697-group16"
+export ATLAS_CONNECTION_STRING="mongodb+srv://param:ZZ6Fz0hcJjODI3aH@msds697-group16.vnw63oa.mongodb.net/?retryWrites=true&w=majority"
+export VECTOR_INDEX_NAME="vector_index"
+export COLLECTION_NAME="new_jobs"
+export JOBS_COLLECTION_NAME="jobs_data"
+export COLLECTION_NAME_STATS="job_stats"
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
