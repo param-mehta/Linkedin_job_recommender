@@ -2,6 +2,7 @@
 from gcs_to_mongo import *
 from get_jobs_from_api import *
 from convert_to_embeddings import *
+from summary_statistics import *
 from airflow.operators.python import PythonOperator
 from airflow import DAG
 from datetime import datetime
