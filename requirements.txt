@@ -1,3 +1,4 @@
+apache-airflow[celery,cncf.kubernetes,google,amazon,snowflake]
 google-cloud-aiplatform
 apache-airflow-providers-apache-spark
 pymongo[srv]==3.11
