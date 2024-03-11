@@ -23,9 +23,9 @@ An end-to-end job recommender engine that performs a similarity search between j
 ## Pipeline Overview
 <img width="1423" alt="Screenshot 2024-03-10 at 12 27 38 AM" src="https://github.com/param-mehta/Linkedin_job_recommender/assets/61198990/fd219f8e-5f01-4809-bd7a-b8e19c3e58de">
 
-- The top branch of the pipeline is what we automate through Airflow. We scrap jobs from LinkedIn, clean data, calculate job statistics,convert descriptions to embeddings and store processed data as mongoDB collections. The reason I am using a NoSQl database is becaus the data is ingested from multiple sources with different schema and format. Also, MongoDB's Atlas Vector Search allows you to store vector embeddings alongside your source data and provides eficient vector operations on these embeddings. While tradiotional SQL databases are sufficiently fast on data that's not too large, vector databases scale much better than the former.
+- The top branch of the pipeline is what we automate through Airflow. We scrap jobs from LinkedIn, clean data, calculate job statistics,convert descriptions to embeddings and store processed data as MongoDB collections. The reason I am using a NoSQl database is because the data is ingested from multiple sources with different schema and format. Also, MongoDB's Atlas Vector Search allows you to store vector embeddings alongside your source data and provides efficient vector operations on these embeddings. While tradiotional SQL databases are sufficiently fast on data that's not too large, vector databases scale much better than the former.
 
-- The bottom branch of the pipline represents the front end. If you do want a live dashboard and want the recommendations to be generated as part of the batch job, you can make a minor tweak in the DAG pipeline. Store your resume and add an additional task at the end which performs the similarity search and fires an Email with the job urls of top recommendations.
+- The bottom branch of the pipline represents the front end. If you don't want a live dashboard and want the recommendations to be generated as part of the batch job, you can make a minor tweak in the DAG pipeline. Store your resume and add an additional task at the end of the DAG pipeline which performs the similarity search and uses an EmailOperator to send you job urls of top recommendations.
 
 ## DAG Workflow
 <img width="1406" alt="image" src="https://github.com/param-mehta/Linkedin_job_recommender/assets/61198990/d5212a83-65b9-4610-a957-ca24660c4d22">
@@ -41,7 +41,7 @@ This following is what a cycle of successful DAG runs looks like on Cloud Compos
 
 
 
-The `convert_to_embeddings` task takes long because I am pushing individual jobs to the mongoDB collection rather than an a single push operation of all jobs that would end up overshooting the default memory (1GB) of small Composer environments
+The `convert_to_embeddings` task takes long because I am pushing individual jobs to the MongoDB collection rather than an a single push operation of all jobs that would end up overshooting the default memory (1GB) of small Composer environments
 
 
 ## Demo
@@ -49,37 +49,13 @@ The `convert_to_embeddings` task takes long because I am pushing individual jobs
 
 
 
-## Installation
+## Installation and Usage
 
-1. Make an environment:
+### Google Cloud Composer
 
-    ```bash
-    conda create --name algo_trading python=3.11.7
-    ```
-    
-    ```bash
-    conda activate algo_trading
-    ```
-    
-2. Clone the repository and install dependencies:
-   
-    
-    ```bash
-    git clone https://github.com/yourusername/Linkedin_job_recommender.git
-    ```
-    
-    ```bash
-    cd Linkedin_job_recommender
-    ```
-    
-    ```bash
-    pip install -r requirements.txt
-    ```
+On composer, you need to create a Composer 2 Environment with size Medium.
 
-
-## Usage
-
-1. Setup the following environment variables on Google Composer. If you are runnning locally, run `bash env.sh` to set environment variables.
+1. Setup the following environment variables in the Composer environment.
    ```bash
     #!/bin/bash
     export GS_BUCKET_NAME=""
@@ -94,7 +70,7 @@ The `convert_to_embeddings` task takes long because I am pushing individual jobs
     export COLLECTION_NAME_STATS=""
     export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
     ```
-2. Install the following dependencies under the PyPI Packages tab on in your Composer environment. If running locally, run `pip install -r requirements.txt`
+2. Install the following dependencies under the PyPI Packages tab on in your Composer environment.
     ```bash
     google-cloud-aiplatform
     apache-airflow-providers-apache-spark
@@ -110,12 +86,63 @@ The `convert_to_embeddings` task takes long because I am pushing individual jobs
     sentence_transformers==2.2.22
     ```
 
-6. Run `streamlit run app.py`, upload resume and check out recommended jobs!
+
+### Local
+
+
+1. Make an environment:
+
+    ```bash
+    conda create --name job_recommender python=3.11.7
+    ```
+    
+    ```bash
+    conda activate job_recommender
+    ```
+    ```bash
+    bash env.sh
+    source env.sh
+    ```
+    
+2. Clone the repository and install dependencies:
+    ```bash
+    git clone https://github.com/yourusername/Linkedin_job_recommender.git
+    ```
+    
+    ```bash
+    cd Linkedin_job_recommender
+    ```
+    
+    ```bash
+    pip install -r requirements.txt
+    ```
+3. Initialise metastore:
+    ```bash
+    airflow db init
+    ```
+4. Make a DAG folder:
+    ```bash
+    mkdir ~/airflow/dags
+    ```
+    This is where all your dag files should be
+
+5. Run the scheduler to trigger the scheduled dag runs:
+    ```bash
+    airflow scheduler
+    ```
+6. Run the webserver to monitor your dag runs:
+    ```bash
+    airflow webserver
+    ```
+7. Start the dashboard, upload resume and check out recommended jobs!
+    ```bash
+    streamlit run app.py
+    ```
 
 
 ## Guide
 
-`linkedin_dds.py`: 
+`linkedin_dag.py`: 
 
 This is the main DAG file that defines all the operators and the dependencies between them. It runs on a daily basis.
 
