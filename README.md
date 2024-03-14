@@ -103,7 +103,7 @@ To set up on Composer, create a Composer 2 Environment with a Medium size.
 
 2. Clone the repository and install dependencies:
     ```bash
-    git clone https://github.com/yourusername/Linkedin_job_recommender.git
+    git clone https://github.com/param-mehta/Linkedin_job_recommender.git
     ```
     ```bash
     cd Linkedin_job_recommender
